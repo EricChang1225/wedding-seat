@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="theme-color" content="#315f49">
-  <meta name="seat-site-version" content="10-songhe-flight">
+  <meta name="seat-site-version" content="11-central-aisle-route">
   <title>韋文 &amp; 筱彤｜婚禮座位查詢</title>
   <meta name="description" content="輸入姓名，查詢韋文與筱彤婚禮座位桌次。">
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ccircle cx='32' cy='32' r='29' fill='%23fff4d6' stroke='%23322118' stroke-width='6'/%3E%3Cpath d='M5 31a27 27 0 0 1 54 0H5z' fill='%23e8483d'/%3E%3Cpath d='M4 32h56' stroke='%23322118' stroke-width='6'/%3E%3Ccircle cx='32' cy='32' r='9' fill='%23fff4d6' stroke='%23322118' stroke-width='5'/%3E%3C/svg%3E">
@@ -373,9 +373,18 @@ window.SEAT_INDEX={"cad908d134525b89842609933e97c1edb7f6700bd1526d62db5255f2d3f1
         return;
       }
 
-      const route = destination[0] > 38
-        ? [entrance,[40,82],[40,34],destination]
-        : [entrance,[40,82],[22,82],[22,destination[1]],destination];
+      // Leave through the banquet-hall door, follow the lower passage to the
+      // central aisle, then walk upward before turning toward the guest's table.
+      // This mirrors the unobstructed route shown on the seating map.
+      const lowerPassageY = 86;
+      const centralAisleX = 26.5;
+      const route = [
+        entrance,
+        [entrance[0], lowerPassageY],
+        [centralAisleX, lowerPassageY],
+        [centralAisleX, destination[1]],
+        destination
+      ];
       const distances = route.slice(1).map((point,index) => Math.hypot(point[0]-route[index][0],point[1]-route[index][1]));
       const totalDistance = distances.reduce((sum,distance) => sum + distance,0) || 1;
       for (let index=1; index<route.length; index++) {
